@@ -34,7 +34,7 @@ import rehypeFigure from "./src/plugins/rehype-figure.mjs";
 export default defineConfig({
 	site: siteConfig.site_url,
 
-	base: "/",
+	base: "/Firefly/",
 	trailingSlash: "always",
 	integrations: [
 		tailwind({

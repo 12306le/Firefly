@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://12306le.github.io/Firefly",
 
 	// 站点描述
 	description:
@@ -142,9 +142,9 @@ export const siteConfig: SiteConfig = {
 	// 统计分析
 	analytics: {
 		// Google Analytics ID
-		googleAnalyticsId: "G-P7GBNJKJKL",
+		googleAnalyticsId: "",
 		// Microsoft Clarity ID
-		microsoftClarityId: "tx9equrgr6",
+		microsoftClarityId: "",
 	},
 
 	// 字体配置
