@@ -7,17 +7,17 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "岛屿",
+	title: "12306le 的小站",
 
 	// 站点副标题
-	subtitle: "",
+	subtitle: "Notes & Tinkering",
 
 	// 站点 URL
 	site_url: "https://12306le.github.io/Firefly",
 
 	// 站点描述
 	description:
-		"这是站点描述",
+		"12306le 的个人博客，记录折腾过程中的笔记与心得。",
 
 	// 站点关键词
 	keywords: [
@@ -71,7 +71,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "12306le",
 		// 全宽导航栏，导航栏是否占满屏幕宽度，true：占满，false：不占满
 		widthFull: false,
 		// 导航栏图标和标题是否跟随主题色
@@ -102,18 +102,18 @@ export const siteConfig: SiteConfig = {
 	// bangumi配置
 	bangumi: {
 		// Bangumi用户ID
-		userId: "1163581",
+		userId: "",
 	},
 
 	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
 	// bangumi的数据为编译时获取的，所以不是实时数据，请配置bangumi.userId
 	pages: {
 		// 赞助页面开关
-		sponsor: true,
+		sponsor: false,
 		// 留言板页面开关，需要配置评论系统
 		guestbook: true,
 		// 番组计划页面开关，含追番、游戏、书籍和音乐，dev调试时只获取一页数据，build才会获取全部数据
-		bangumi: true,
+		bangumi: false,
 	},
 
 	// 文章列表布局配置

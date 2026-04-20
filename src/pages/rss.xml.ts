@@ -24,7 +24,7 @@ export async function GET(context: APIContext) {
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
-		site: context.site ?? "https://firefly.cuteleaf.cn",
+		site: context.site ?? siteConfig.site_url,
 		customData: `
 		<language>${siteConfig.lang}</language>
 		<templateTheme>Firefly</templateTheme>
