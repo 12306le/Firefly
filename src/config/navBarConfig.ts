@@ -19,21 +19,12 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	];
 
 	// 自定义导航栏链接,并且支持多级菜单
-	links.push({
-		name: "链接",
-		url: "/links/",
-		icon: "material-symbols:link",
-
-		// 子菜单
-		children: [
-			{
-				name: "GitHub",
-				url: "https://github.com/12306le",
-				external: true,
-				icon: "fa6-brands:github",
-			},
-		],
-	});
+	// links.push({
+	// 	name: "链接",
+	// 	url: "/links/",
+	// 	icon: "material-symbols:link",
+	// 	children: [],
+	// });
 
 	// 友链
 	links.push(LinkPreset.Friends);

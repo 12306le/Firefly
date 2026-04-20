@@ -7,17 +7,17 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "12306le 的小站",
+	title: "示例博客",
 
 	// 站点副标题
-	subtitle: "Notes & Tinkering",
+	subtitle: "",
 
 	// 站点 URL
 	site_url: "https://12306le.github.io/Firefly",
 
 	// 站点描述
 	description:
-		"12306le 的个人博客，记录折腾过程中的笔记与心得。",
+		"一个基于 Firefly 主题搭建的静态博客示例站点。",
 
 	// 站点关键词
 	keywords: [
@@ -71,7 +71,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "12306le",
+		title: "Blog",
 		// 全宽导航栏，导航栏是否占满屏幕宽度，true：占满，false：不占满
 		widthFull: false,
 		// 导航栏图标和标题是否跟随主题色

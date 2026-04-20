@@ -11,15 +11,6 @@ export const friendsPageConfig: FriendsPageConfig = {
 // 友链配置
 export const friendsConfig: FriendLink[] = [
 	{
-		title: "12306le on GitHub",
-		imgurl: "https://avatars.githubusercontent.com/u/12306le?v=4&s=640",
-		desc: "我的 GitHub 主页，放了一些瞎折腾的仓库。",
-		siteurl: "https://github.com/12306le",
-		tags: ["GitHub"],
-		weight: 10, // 权重，数字越大排序越靠前
-		enabled: true, // 是否启用
-	},
-	{
 		title: "Astro",
 		imgurl: "https://avatars.githubusercontent.com/u/44914786?v=4&s=640",
 		desc: "The web framework for content-driven websites.",

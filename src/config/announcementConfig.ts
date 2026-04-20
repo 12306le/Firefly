@@ -5,7 +5,7 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "公告",
 
 	// 公告内容
-	content: "欢迎来到 12306le 的小站！这里会随缘记录折腾日记。",
+	content: "欢迎访问这个博客示例站点。这里只有一篇示例文章作为使用指南。",
 
 	// 是否允许用户关闭公告
 	closable: true,
