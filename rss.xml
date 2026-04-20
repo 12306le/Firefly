@@ -1,4 +1,348 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>示例博客</title><description>No description</description><link>https://12306le.github.io/Firefly/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.3.8</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年4月20日 18:35:36</lastBuildDate><item><title>Firefly 简单使用指南</title><link>https://12306le.github.io/Firefly/posts/guide/</link><guid isPermaLink="true">https://12306le.github.io/Firefly/posts/guide/</guid><description>如何使用 Firefly 博客模板。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;这个博客模板是基于 &lt;a href=&quot;https://astro.build/&quot;&gt;Astro&lt;/a&gt; 构建的。对于本指南中未提及的内容，您可以在 &lt;a href=&quot;https://docs.astro.build/&quot;&gt;Astro 文档&lt;/a&gt; 中找到答案。&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>示例博客</title><description>No description</description><link>https://12306le.github.io/Firefly/</link><language>zh_CN</language><templateTheme>Firefly</templateTheme><templateThemeVersion>6.3.8</templateThemeVersion><templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl><lastBuildDate>2026年4月20日 19:31:49</lastBuildDate><item><title>手机党运维速查手册：tmux + Claude Code + Ubuntu 三合一</title><link>https://12306le.github.io/Firefly/posts/mobile-ops-guide/</link><guid isPermaLink="true">https://12306le.github.io/Firefly/posts/mobile-ops-guide/</guid><description>专为用 Termius 连服务器的手机党写的速查手册：tmux 防断线保任务、Claude Code 换 API（anyrouter 镜像）、Ubuntu 基本操作，一篇全搞定。</description><pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;写在前面&lt;/strong&gt;：手机屏幕小、输入慢，SSH 一断开任务就丢，命令还老记不住。这篇文章就是给手机 Termius 党准备的&quot;贴身小抄&quot;——三大块内容、可直接复制的命令、出问题就翻得到答案。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;📑 目录导航&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#part-1--tmux-%E9%98%B2%E6%96%AD%E7%BA%BF%E4%BF%9D%E4%BB%BB%E5%8A%A1&quot;&gt;Part 1 · tmux 防断线保任务&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-tmux&quot;&gt;为什么要用 tmux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84-6-%E4%B8%AA%E5%91%BD%E4%BB%A4&quot;&gt;最常用的 6 个命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#tmux-%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5%E8%A1%A8&quot;&gt;快捷键速查表&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E6%89%8B%E6%9C%BA%E5%85%9A%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5&quot;&gt;手机党最佳实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#part-2--claude-code-%E6%8D%A2-apianyrouter-%E9%95%9C%E5%83%8F&quot;&gt;Part 2 · Claude Code 换 API（anyrouter 镜像）&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8D%A2-api&quot;&gt;为什么要换 API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#anyrouter-%E6%B3%A8%E5%86%8C%E4%B8%8E%E8%8E%B7%E5%8F%96-key&quot;&gt;anyrouter 注册与获取 Key&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F&quot;&gt;配置环境变量&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E9%AA%8C%E8%AF%81%E4%B8%8E%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98&quot;&gt;验证与常见问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#part-3--ubuntu-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E9%80%9F%E6%9F%A5&quot;&gt;Part 3 · Ubuntu 基本操作速查&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95&quot;&gt;文件与目录&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85&quot;&gt;软件安装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E6%9C%8D%E5%8A%A1&quot;&gt;进程与服务&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E7%BD%91%E7%BB%9C%E4%B8%8E%E7%AB%AF%E5%8F%A3&quot;&gt;网络与端口&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E7%A3%81%E7%9B%98%E4%B8%8E%E6%9D%83%E9%99%90&quot;&gt;磁盘与权限&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Part 1 · tmux 防断线保任务&lt;/h2&gt;
+&lt;h3&gt;为什么要用 tmux&lt;/h3&gt;
+&lt;p&gt;手机 Termius 连服务器最大的痛点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;🚌 坐地铁信号差 → SSH 断线 → &lt;strong&gt;任务直接没了&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;🔋 手机灭屏久了 → 连接超时 → &lt;strong&gt;前面跑了半小时的脚本白跑&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;📞 切到微信回消息 → 回来一看终端已断开&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;tmux 就是解药&lt;/strong&gt;：它把你的终端跑在服务器后台，SSH 断不断开和它无关。下次连上服务器，一条命令就回到原来的现场，任务还在跑。&lt;/p&gt;
+&lt;h3&gt;最常用的 6 个命令&lt;/h3&gt;
+&lt;p&gt;只要记住这 6 条，80% 场景够用：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 1. 新建一个窗口叫 work（第一次用就这样）
+tmux new -s work
+
+# 2. 先暂时离开（任务继续在后台跑），按 Ctrl+b 松开，再按 d
+# 或者直接关掉 Termius 也行，tmux 不会死
+
+# 3. 回来继续干活
+tmux a -t work
+
+# 4. 忘了叫什么名字？列出所有会话
+tmux ls
+
+# 5. 干完活了，彻底关掉这个会话
+tmux kill-session -t work
+
+# 6. 一键关掉所有 tmux
+tmux kill-server
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;tmux 快捷键速查表&lt;/h3&gt;
+&lt;p&gt;tmux 的所有快捷键都要&lt;strong&gt;先按前缀键 &lt;code&gt;Ctrl+b&lt;/code&gt;&lt;/strong&gt;，松开后再按下一个键。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;按键&lt;/th&gt;
+&lt;th&gt;作用&lt;/th&gt;
+&lt;th&gt;场景&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;d&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;离开当前会话（detach）&lt;/td&gt;
+&lt;td&gt;要下班了，任务继续跑&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;c&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;新建窗口&lt;/td&gt;
+&lt;td&gt;想同时跑俩命令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;n&lt;/code&gt; / &lt;code&gt;p&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;下一个 / 上一个窗口&lt;/td&gt;
+&lt;td&gt;切换窗口&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;数字&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;跳到指定窗口&lt;/td&gt;
+&lt;td&gt;如 &lt;code&gt;Ctrl+b 0&lt;/code&gt; 跳到 0 号窗口&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;,&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;给窗口改名&lt;/td&gt;
+&lt;td&gt;多窗口时方便识别&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;%&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;左右分屏&lt;/td&gt;
+&lt;td&gt;一边跑程序一边看日志&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;&quot;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;上下分屏&lt;/td&gt;
+&lt;td&gt;同上&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;o&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在分屏之间切换&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;x&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;关掉当前分屏&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+b&lt;/code&gt; &lt;code&gt;[&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;进入滚屏模式（按 q 退出）&lt;/td&gt;
+&lt;td&gt;翻看上面的输出&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;💡 &lt;strong&gt;手机 Termius 小贴士&lt;/strong&gt;：Termius 键盘上有专门的 &lt;code&gt;Ctrl&lt;/code&gt; 键，先点 &lt;code&gt;Ctrl&lt;/code&gt; 再点 &lt;code&gt;b&lt;/code&gt; 就是前缀键。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;手机党最佳实践&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;推荐工作流程&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 一上服务器就进 tmux
+tmux a -t work 2&amp;gt;/dev/null || tmux new -s work
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这条命令的意思是：&lt;strong&gt;有就进，没有就新建&lt;/strong&gt;。把它写进 &lt;code&gt;~/.bashrc&lt;/code&gt; 最后一行，每次 SSH 一连就自动进 tmux：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo &apos;[[ -z &quot;$TMUX&quot; ]] &amp;amp;&amp;amp; (tmux a -t work 2&amp;gt;/dev/null || tmux new -s work)&apos; &amp;gt;&amp;gt; ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ 注意：别对 root 或脚本化的 ssh 会话用这招，不然会循环嵌套。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;救命三连（手机刚断线回来）&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tmux ls          # 先看还有哪些会话
+tmux a -t work   # 接回原来那个
+# 如果有多个会话，attach 到最近的：
+tmux a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Part 2 · Claude Code 换 API（anyrouter 镜像）&lt;/h2&gt;
+&lt;h3&gt;为什么要换 API&lt;/h3&gt;
+&lt;p&gt;官方 Anthropic API 在国内直连&lt;strong&gt;不稳定&lt;/strong&gt;，而且需要海外支付方式。&lt;strong&gt;anyrouter 镜像&lt;/strong&gt;（&lt;a href=&quot;https://anyrouter.top&quot;&gt;https://anyrouter.top&lt;/a&gt;）解决了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;✅ 国内直连稳定，不用代理&lt;/li&gt;
+&lt;li&gt;✅ 支持支付宝/微信充值&lt;/li&gt;
+&lt;li&gt;✅ 兼容官方 API，Claude Code 改一个环境变量就能用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;anyrouter 注册与获取 Key&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;打开 &lt;a href=&quot;https://anyrouter.top&quot;&gt;https://anyrouter.top&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;手机号或邮箱注册登录&lt;/li&gt;
+&lt;li&gt;进入&quot;&lt;strong&gt;令牌 / API Key&lt;/strong&gt;&quot;页面，点&quot;&lt;strong&gt;添加新令牌&lt;/strong&gt;&quot;&lt;/li&gt;
+&lt;li&gt;复制出来的 Key，形如 &lt;code&gt;sk-xxxxxxxxxxxx...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;充值余额（看着用，一般 10 块够玩好久）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;配置环境变量&lt;/h3&gt;
+&lt;p&gt;Claude Code 认两个环境变量：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;变量名&lt;/th&gt;
+&lt;th&gt;填什么&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ANTHROPIC_BASE_URL&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://anyrouter.top&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ANTHROPIC_AUTH_TOKEN&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;第 4 步复制的 Key&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;一次性生效（只对当前终端有效）&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export ANTHROPIC_BASE_URL=&quot;https://anyrouter.top&quot;
+export ANTHROPIC_AUTH_TOKEN=&quot;sk-你的Key&quot;
+claude
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;永久生效（推荐）&lt;/strong&gt;：写入 &lt;code&gt;~/.bashrc&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; ~/.bashrc &amp;lt;&amp;lt;&apos;EOF&apos;
+
+# Claude Code via anyrouter
+export ANTHROPIC_BASE_URL=&quot;https://anyrouter.top&quot;
+export ANTHROPIC_AUTH_TOKEN=&quot;sk-你的Key&quot;
+EOF
+
+source ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ &lt;strong&gt;关键坑点&lt;/strong&gt;：如果你之前设置过 &lt;code&gt;ANTHROPIC_API_KEY&lt;/code&gt;，&lt;strong&gt;必须先清掉&lt;/strong&gt;，不然 Claude Code 会优先用它而不走镜像：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;unset ANTHROPIC_API_KEY
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;要彻底干净，临时启动也可以用 &lt;code&gt;env -u&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;env -u ANTHROPIC_API_KEY claude
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;验证与常见问题&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;验证是否生效&lt;/strong&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo $ANTHROPIC_BASE_URL   # 应该输出 https://anyrouter.top
+claude --version           # 看看是否正常启动
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;常见问题&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;报错&lt;/th&gt;
+&lt;th&gt;原因&lt;/th&gt;
+&lt;th&gt;解决&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;401 Unauthorized&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Key 错了 / 没改环境变量&lt;/td&gt;
+&lt;td&gt;重新复制 Key，&lt;code&gt;source ~/.bashrc&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;余额不足&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;欠费了&lt;/td&gt;
+&lt;td&gt;回 anyrouter 充值&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;一直连官方 API&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ANTHROPIC_API_KEY&lt;/code&gt; 没清&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unset ANTHROPIC_API_KEY&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;速度慢&lt;/td&gt;
+&lt;td&gt;高峰期&lt;/td&gt;
+&lt;td&gt;换时段 or 升级套餐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Part 3 · Ubuntu 基本操作速查&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;手机 Termius 输入慢，下面的命令都是&lt;strong&gt;最短最实用&lt;/strong&gt;的版本，直接复制改参数就能用。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;文件与目录&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;pwd                      # 我在哪
+ls -lh                   # 列当前目录（-h 是人类可读的文件大小）
+ls -lha                  # 带隐藏文件
+cd ~                     # 回家目录
+cd -                     # 回上一次的目录
+
+mkdir -p a/b/c           # 一口气建多层目录
+touch foo.txt            # 建空文件
+
+cp file1 file2           # 复制文件
+cp -r dir1 dir2          # 复制目录（-r 递归）
+mv a b                   # 移动 / 改名
+rm file                  # 删文件
+rm -rf dir               # 删目录（⚠️ 不可恢复，看清路径再按回车）
+
+cat file                 # 看整个文件
+less file                # 分页看（q 退出，/关键词 搜索）
+head -20 file            # 看前 20 行
+tail -f log              # 实时追加看日志（Ctrl+c 退出）
+
+find . -name &quot;*.log&quot;     # 按文件名找
+grep -rn &quot;关键词&quot; .      # 在当前目录递归搜内容
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;软件安装&lt;/h3&gt;
+&lt;p&gt;Ubuntu 用 &lt;code&gt;apt&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt update                          # 先刷软件源（必做）
+sudo apt install -y curl git tmux htop   # 装常用工具，-y 是省掉确认
+
+sudo apt upgrade -y                      # 升级已装的软件
+sudo apt remove 包名                     # 卸载
+sudo apt autoremove                      # 清掉不再需要的依赖
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;装 Node.js / Python / Docker 这些大件推荐用官方脚本，别用 apt 的老版本。&lt;/p&gt;
+&lt;h3&gt;进程与服务&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 看进程
+ps aux | grep nginx        # 搜特定进程
+top                        # 实时进程监视（按 q 退出）
+htop                       # 更好看的 top（需要 apt install htop）
+
+# 杀进程
+kill PID                   # 正常关
+kill -9 PID                # 强杀（杀不掉的终极手段）
+pkill -f 关键词            # 按名字杀一批
+
+# 服务管理（systemd）
+sudo systemctl status nginx    # 看状态
+sudo systemctl start nginx     # 启动
+sudo systemctl stop nginx      # 停止
+sudo systemctl restart nginx   # 重启
+sudo systemctl enable nginx    # 开机自启
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;网络与端口&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl -I https://google.com   # 看响应头，测试连通性
+ping -c 4 baidu.com          # ping 4 次就停
+
+# 端口占用（查 80 端口被谁占了）
+sudo ss -tlnp | grep :80
+# 或者老办法
+sudo lsof -i :80
+
+# 放行端口（ufw 防火墙）
+sudo ufw allow 80
+sudo ufw status
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;磁盘与权限&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;df -h                # 看磁盘剩多少（-h 人类可读）
+du -sh *             # 当前目录下每一项占多少
+du -sh * | sort -h   # 从小到大排序
+free -h              # 看内存
+
+# 权限
+chmod +x script.sh   # 加可执行权限
+chmod 755 file       # rwxr-xr-x
+chown user:user file # 改属主
+
+# 我是谁 / 我属于谁
+whoami
+groups
+id
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr /&gt;
+&lt;h2&gt;🎒 带走这张速查卡&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;手机党三条金律&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;一上服务器先进 tmux&lt;/strong&gt;：&lt;code&gt;tmux a -t work || tmux new -s work&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code 不通就检查环境变量&lt;/strong&gt;：&lt;code&gt;echo $ANTHROPIC_BASE_URL&lt;/code&gt; 和 &lt;code&gt;unset ANTHROPIC_API_KEY&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;任何 &lt;code&gt;rm -rf&lt;/code&gt; 之前多看一眼路径&lt;/strong&gt;，手机误触代价很大&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;收藏这篇文章，手机断网回来翻一翻，什么问题都有答案。 🚀&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;strong&gt;相关资源&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/tmux/tmux/wiki&quot;&gt;tmux 官方文档&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://anyrouter.top&quot;&gt;anyrouter 镜像&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.claude.com/claude-code&quot;&gt;Claude Code 官方文档&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://help.ubuntu.com/&quot;&gt;Ubuntu 官方手册&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded><author>Blogger</author></item><item><title>Firefly 简单使用指南</title><link>https://12306le.github.io/Firefly/posts/guide/</link><guid isPermaLink="true">https://12306le.github.io/Firefly/posts/guide/</guid><description>如何使用 Firefly 博客模板。</description><pubDate>Fri, 02 Jan 1970 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;这个博客模板是基于 &lt;a href=&quot;https://astro.build/&quot;&gt;Astro&lt;/a&gt; 构建的。对于本指南中未提及的内容，您可以在 &lt;a href=&quot;https://docs.astro.build/&quot;&gt;Astro 文档&lt;/a&gt; 中找到答案。&lt;/p&gt;
 &lt;h2&gt;文章的 Front-matter&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;---
 title: 我的第一篇博客文章
